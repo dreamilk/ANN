@@ -10,8 +10,8 @@ int main()
     std::vector<std::vector<double>> x = {{1}, {2}};
     std::vector<std::vector<double>> y = {{2}, {4}};
 
-    network net;
-    net.train(x, y,3);
+    network net({1, 2, 2, 1});
+    net.train(x, y, 3);
 
     std::vector<double> input = {3};
     std::vector<double> output = net.predict(input);

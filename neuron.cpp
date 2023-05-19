@@ -2,14 +2,18 @@
 
 neuron::neuron()
 {
-    
+
+}
+
+neuron::neuron(int preSize)
+{
+    b = dis(engine);
+    for(int i = 0;i<preSize;++i){
+        w.push_back(dis(engine));
+    }
 }
 
 neuron::~neuron()
 {
 
-}
-
-neuron::neuron(double w,double b):w(w),b(b){
-    error = 0;
 }

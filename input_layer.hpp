@@ -6,7 +6,7 @@
 
 #include <vector>
 
-class input_layer:layer
+class input_layer:public layer
 {
 
 public:

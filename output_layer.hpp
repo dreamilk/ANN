@@ -6,12 +6,12 @@
 
 #include <vector>
 
-class input_layer:layer
+class output_layer:public layer
 {
 
 public:
-    input_layer(int size);
-    ~input_layer();
+    output_layer(int size);
+    output_layer(layer* preLayer,int size);
 };
 
 #endif

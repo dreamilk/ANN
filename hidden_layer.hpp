@@ -1,14 +1,14 @@
-#ifndef __HIDDEN_LAYER
-#define __HIDDEN_LAYER
+#ifndef __HIDDEN_LAYER_HPP
+#define __HIDDEN_LAYER_HPP
 
 #include "layer.hpp"
 
-class hidden_layer: layer
+class hidden_layer:public layer
 {
 private:
     /* data */
 public:
-    hidden_layer(/* args */);
+    hidden_layer(layer* preLayer,int size);
     ~hidden_layer();
 };
 

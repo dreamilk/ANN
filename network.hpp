@@ -2,6 +2,9 @@
 #define __NETWORK_HPP
 
 #include "layer.hpp"
+#include "input_layer.hpp"
+#include "output_layer.hpp"
+#include "hidden_layer.hpp"
 
 #include <vector>
 
