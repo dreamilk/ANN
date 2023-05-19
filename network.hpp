@@ -12,6 +12,8 @@ class network
 {
 private:
     std::vector<layer*> layers;
+
+    double calculateLoss(std::vector<double> output);
 public:
     network();
     network(std::vector<int> layerSize);
@@ -19,6 +21,9 @@ public:
 
     void train(std::vector<std::vector<double>> x,std::vector<std::vector<double>> y,int epoches);
     std::vector<double> predict(std::vector<double> input);
+    void fprop(std::vector<double> input);
+    void bprop(double loss);
+
 };
 
 #endif
