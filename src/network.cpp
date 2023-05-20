@@ -1,29 +1,25 @@
 #include "network.hpp"
 
-network::network()
+Network::Network()
 {
 }
 
-network::network(std::vector<int> layerSize)
+Network::Network(std::vector<int> layerSize)
 {
     for (int i = 0; i < layerSize.size(); ++i)
     {
         if (i == 0)
         {
-            layers.push_back(new input_layer(layerSize[i]));
-        }
-        else if (i == layerSize.size() - 1)
-        {
-            layers.push_back(new output_layer(layers.back(), layerSize[i]));
+            layers.push_back(new Layer(0, 1));
         }
         else
         {
-            layers.push_back(new hidden_layer(layers.back(), layerSize[i]));
+            layers.push_back(new Layer(layerSize[i - 1], layerSize[i]));
         }
     }
 }
 
-double network::calculateLoss(std::vector<double> output)
+double Network::calculateLoss(std::vector<double> output)
 {
     double loss = 0.0;
     for (int i = 0; i < layers.back()->neurons.size(); ++i)
@@ -33,28 +29,28 @@ double network::calculateLoss(std::vector<double> output)
     return loss / (2 * output.size());
 }
 
-double network::activate(double x)
+double Network::activate(double x)
 {
     return 1 / (1 + exp(-x));
 }
 
-double network::activateDerivative(double y)
+double Network::activateDerivative(double y)
 {
     return y * (1 - y);
 }
 
-void network::bprop(std::vector<double> output)
+void Network::bprop(std::vector<double> output)
 {
     for (int i = layers.size() - 1; i >= 0; i--)
     {
-        layer *l = layers.at(i);
+        Layer *l = layers.at(i);
         std::vector<double> errors;
         if (i != layers.size() - 1)
         {
             for (int j = 0; j < l->neurons.size(); j++)
             {
                 double error = 0;
-                for (neuron *n : layers.at(i + 1)->neurons)
+                for (Neuron *n : layers.at(i + 1)->neurons)
                 {
                     error += n->weights.at(j) * n->delta;
                 }
@@ -70,27 +66,27 @@ void network::bprop(std::vector<double> output)
         }
         for (int j = 0; j < l->neurons.size(); j++)
         {
-            neuron *n = l->neurons.at(j);
+            Neuron *n = l->neurons.at(j);
             n->delta = errors.at(j) * activateDerivative(n->output);
         }
     }
 }
 
-void network::updateWeights(std::vector<double> input, double learingRate)
+void Network::updateWeights(std::vector<double> input, double learingRate)
 {
     for (int i = 1; i < layers.size(); ++i)
     {
-        layer *l = layers.at(i);
+        Layer *l = layers.at(i);
         if (i != 0)
         {
             input.clear();
-            for (neuron *n : layers.at(i - 1)->neurons)
+            for (Neuron *n : layers.at(i - 1)->neurons)
             {
                 input.push_back(n->output);
             }
         }
 
-        for (neuron *n : l->neurons)
+        for (Neuron *n : l->neurons)
         {
             for (int j = 0; j < n->weights.size(); ++j)
             {
@@ -101,7 +97,7 @@ void network::updateWeights(std::vector<double> input, double learingRate)
     }
 }
 
-void network::train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate)
+void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate)
 {
     printf("Training Epoches = %d  LearningRate = %f\n ", epoches, learningRate);
     for (int epo = 1; epo <= epoches; ++epo)
@@ -123,20 +119,20 @@ void network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
     printf("End Training \n");
 }
 
-void network::fprop(std::vector<double> input)
+void Network::fprop(std::vector<double> input)
 {
     for (int i = 0; i < layers.size(); ++i)
     {
-        layer *preLayer = layers[i]->preLayer;
         for (int j = 0; j < layers[i]->neurons.size(); ++j)
         {
-            neuron *n = layers[i]->neurons[j];
+            Neuron *n = layers[i]->neurons[j];
             if (i == 0)
             {
                 n->output = input[j];
             }
             else
             {
+                Layer *preLayer = layers[i - 1];
                 double sum = n->bias;
                 for (int k = 0; k < preLayer->neurons.size(); ++k)
                 {
@@ -148,7 +144,7 @@ void network::fprop(std::vector<double> input)
     }
 }
 
-std::vector<double> network::predict(std::vector<double> input)
+std::vector<double> Network::predict(std::vector<double> input)
 {
     fprop(input);
 
@@ -160,7 +156,7 @@ std::vector<double> network::predict(std::vector<double> input)
     return output;
 }
 
-void network::printNet()
+void Network::printNet()
 {
     printf("Network\n");
     for (int i = 0; i < layers.size(); i++)
@@ -169,7 +165,7 @@ void network::printNet()
         for (int j = 0; j < layers.at(i)->neurons.size(); ++j)
         {
             printf(" [");
-            neuron *n = layers[i]->neurons[j];
+            Neuron *n = layers[i]->neurons[j];
             for (int k = 0; k < n->weights.size(); ++k)
             {
                 printf(" %f ", n->weights[k]);
@@ -180,7 +176,7 @@ void network::printNet()
     }
 }
 
-double network::test(std::vector<std::vector<double>> input, std::vector<std::vector<double>> output)
+double Network::test(std::vector<std::vector<double>> input, std::vector<std::vector<double>> output)
 {
     int totalNum = input.size();
     int correctNum = 0;
@@ -197,6 +193,92 @@ double network::test(std::vector<std::vector<double>> input, std::vector<std::ve
     return 1.0 * correctNum / totalNum;
 }
 
-network::~network()
+void Network::saveModel(std::string path)
+{
+    std::vector<std::string> data;
+    for (int i = 0; i < layers.size(); ++i)
+    {
+        Layer *l = layers.at(i);
+        data.push_back("L" + std::to_string(l->neurons.size()));
+        for (Neuron *n : l->neurons)
+        {
+            std::string nData = "N" + std::to_string(n->weights.size()) + " ";
+            for (int j = 0; j < n->weights.size(); ++j)
+            {
+                nData += std::to_string(n->weights[i]) + ",";
+            }
+            nData += std::to_string(n->bias);
+            data.push_back(nData);
+        }
+    }
+    std::ofstream ofs;
+    ofs.open(path, std::ios::out);
+    if (!ofs.is_open())
+    {
+        printf("saveModel Error\n");
+        return;
+    }
+    for (std::string s : data)
+    {
+        ofs << s << std::endl;
+    }
+    ofs.close();
+}
+
+void Network::loadModel(std::string path)
+{
+    std::ifstream ifs;
+    ifs.open(path, std::ios::in);
+    if (!ifs.is_open())
+    {
+        printf("loadModel Error\n");
+        return;
+    }
+    // clear layers
+    for (int i = 0; i < layers.size(); ++i)
+    {
+        delete layers[i];
+    }
+    layers.clear();
+
+    std::string line;
+    while (std::getline(ifs, line))
+    {
+        if (line[0] == 'L')
+        {
+            int size = std::stoi(line.substr(1, line.size() - 1));
+            layers.push_back(new Layer());
+        }
+        else if (line[0] == 'N')
+        {
+            Layer *l = layers.back();
+            int num = 0;
+            std::string s;
+            Neuron *neu = new Neuron();
+            for (int i = 1; i < line.size(); ++i)
+            {
+                if (line[i] == ' ')
+                {
+                    num = std::stoi(s);
+                    s.clear();
+                }
+                else if (line[i] == ',')
+                {
+                    neu->weights.push_back(std::stod(s));
+                    s.clear();
+                }
+                else
+                {
+                    s += line[i];
+                }
+            }
+            neu->bias = std::stod(s);
+            l->neurons.push_back(neu);
+        }
+    }
+    ifs.close();
+}
+
+Network::~Network()
 {
 }

@@ -1,25 +1,17 @@
-#include "layer.hpp"
+#include "Layer.hpp"
 
-layer::layer()
+Layer::Layer()
 {
 }
 
-layer::~layer()
+Layer::~Layer()
 {
 }
 
-layer::layer(int size) : preLayer(nullptr)
+Layer::Layer(int preSize, int size)
 {
     for (int i = 0; i < size; ++i)
     {
-        neurons.push_back(new neuron(1));
-    }
-}
-
-layer::layer(layer *preLayer, int size) : preLayer(preLayer)
-{
-    for (int i = 0; i < size; ++i)
-    {
-        neurons.push_back(new neuron(preLayer->neurons.size()));
+        neurons.push_back(new Neuron(preSize));
     }
 }

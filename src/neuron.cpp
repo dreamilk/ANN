@@ -1,19 +1,19 @@
 #include "neuron.hpp"
 
-neuron::neuron()
+Neuron::Neuron()
 {
     bias = 0;
     delta = 0;
     output = 0;
 }
 
-double neuron::generateRandom(double min, double max)
+double Neuron::generateRandom(double min, double max)
 {
     double rd = (double)rand() / RAND_MAX;
     return min + rd * (max - min);
 }
 
-neuron::neuron(int preSize)
+Neuron::Neuron(int preSize)
 {
     bias = generateRandom(-1, 1);
     for (int i = 0; i < preSize; ++i)
@@ -24,6 +24,6 @@ neuron::neuron(int preSize)
     output = 0.0;
 }
 
-neuron::~neuron()
+Neuron::~Neuron()
 {
 }

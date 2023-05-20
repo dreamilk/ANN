@@ -24,10 +24,12 @@ int main()
     // }
     // printf("\n");
 
-    std::vector<int> spec = {4, 4, 5, 6, 5, 4, 3}; // the num of neuron in every layer
+    // std::vector<int> spec = {4, 4, 5, 6, 5, 4, 3}; // the num of neuron in every layer
+    // network net(spec);
+    // net.train(x, y, 10000, 0.01);
 
-    network net(spec);
-    net.train(x, y, 10000, 0.01);
+    Network net;
+    net.loadModel("./data.model");
 
     std::vector<double> input = x[0];
     std::vector<double> output = net.predict(input);
@@ -40,6 +42,7 @@ int main()
 
     // net.printNet();
     printf("accuracy %f\n", net.test(x, y));
+    // net.saveModel("./data.model");
 
     return 0;
 }

@@ -1,11 +1,11 @@
-#ifndef __NEURON_HPP
-#define __NEURON_HPP
+#ifndef __Neuron_HPP
+#define __Neuron_HPP
 
 #include <vector>
 #include <random>
 #include <ctime>
 
-class neuron
+class Neuron
 {
 private:
     std::default_random_engine engine;
@@ -20,9 +20,9 @@ public:
     double delta;
 
 public:
-    neuron();
-    neuron(int preSize);
-    ~neuron();
+    Neuron();
+    Neuron(int preSize);
+    ~Neuron();
 };
 
 #endif

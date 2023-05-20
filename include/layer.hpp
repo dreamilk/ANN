@@ -1,21 +1,19 @@
-#ifndef __LAYER_HPP
-#define __LAYER_HPP
+#ifndef __Layer_HPP
+#define __Layer_HPP
 
 #include "neuron.hpp"
 
 #include <vector>
 
-class layer
+class Layer
 {
 public:
-    std::vector<neuron*> neurons;
-    layer *preLayer;
+    std::vector<Neuron *> neurons;
 
 public:
-    layer();
-    layer(int size);
-    layer(layer* preLayer,int size);
-    ~layer();
+    Layer();
+    Layer(int preSize, int size);
+    ~Layer();
 };
 
 #endif

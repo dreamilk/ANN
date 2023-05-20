@@ -1,25 +1,24 @@
-#ifndef __NETWORK_HPP
-#define __NETWORK_HPP
+#ifndef __Network_HPP
+#define __Network_HPP
 
 #include "layer.hpp"
-#include "input_layer.hpp"
-#include "output_layer.hpp"
-#include "hidden_layer.hpp"
 
 #include <vector>
 #include <algorithm>
+#include <fstream>
+#include <string>
 
-class network
+class Network
 {
 private:
-    std::vector<layer *> layers;
+    std::vector<Layer *> layers;
 
     double calculateLoss(std::vector<double> output);
 
 public:
-    network();
-    network(std::vector<int> layerSize);
-    ~network();
+    Network();
+    Network(std::vector<int> layerSize);
+    ~Network();
 
     double activate(double);
     double activateDerivative(double);
@@ -31,6 +30,9 @@ public:
     void updateWeights(std::vector<double> input, double learningRate);
 
     double test(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y);
+
+    void saveModel(std::string path);
+    void loadModel(std::string path);
 
     void printNet();
 };
