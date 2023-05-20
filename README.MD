@@ -6,3 +6,9 @@ An artificial neural network framework based on c++
 ```
 bash ./build.sh
 ```
+
+## TEST
+
+```
+./ann
+```
