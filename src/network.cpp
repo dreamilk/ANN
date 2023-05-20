@@ -10,7 +10,7 @@ Network::Network(std::vector<int> layerSize)
     {
         if (i == 0)
         {
-            layers.push_back(new Layer(0, 1));
+            layers.push_back(new Layer(0, layerSize[i]));
         }
         else
         {
@@ -74,7 +74,7 @@ void Network::bprop(std::vector<double> output)
 
 void Network::updateWeights(std::vector<double> input, double learingRate)
 {
-    for (int i = 1; i < layers.size(); ++i)
+    for (int i = 0; i < layers.size(); ++i)
     {
         Layer *l = layers.at(i);
         if (i != 0)
@@ -159,20 +159,25 @@ std::vector<double> Network::predict(std::vector<double> input)
 void Network::printNet()
 {
     printf("Network\n");
-    for (int i = 0; i < layers.size(); i++)
+    std::vector<std::string> data;
+    for (int i = 0; i < layers.size(); ++i)
     {
-        printf("{");
-        for (int j = 0; j < layers.at(i)->neurons.size(); ++j)
+        Layer *l = layers.at(i);
+        data.push_back("L" + std::to_string(l->neurons.size()));
+        for (Neuron *n : l->neurons)
         {
-            printf(" [");
-            Neuron *n = layers[i]->neurons[j];
-            for (int k = 0; k < n->weights.size(); ++k)
+            std::string nData = "N" + std::to_string(n->weights.size()) + " ";
+            for (int j = 0; j < n->weights.size(); ++j)
             {
-                printf(" %f ", n->weights[k]);
+                nData += std::to_string(n->weights[j]) + ",";
             }
-            printf(" %f ] ", n->bias);
+            nData += std::to_string(n->bias);
+            data.push_back(nData);
         }
-        printf("}\n");
+    }
+    for (std::string s : data)
+    {
+        printf("%s\n", s.c_str());
     }
 }
 
@@ -205,7 +210,7 @@ void Network::saveModel(std::string path)
             std::string nData = "N" + std::to_string(n->weights.size()) + " ";
             for (int j = 0; j < n->weights.size(); ++j)
             {
-                nData += std::to_string(n->weights[i]) + ",";
+                nData += std::to_string(n->weights[j]) + ",";
             }
             nData += std::to_string(n->bias);
             data.push_back(nData);
@@ -233,11 +238,6 @@ void Network::loadModel(std::string path)
     {
         printf("loadModel Error\n");
         return;
-    }
-    // clear layers
-    for (int i = 0; i < layers.size(); ++i)
-    {
-        delete layers[i];
     }
     layers.clear();
 

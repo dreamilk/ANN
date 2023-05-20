@@ -13,20 +13,10 @@ int main()
     std::vector<std::vector<double>> x = ds.getInput();
     std::vector<std::vector<double>> y = ds.getOutput();
 
-    // for (auto a : x[0])
-    // {
-    //     printf("%f ", a);
-    // }
-    // printf("\n");
-    // for (auto b : y[0])
-    // {
-    //     printf("%f ", b);
-    // }
-    // printf("\n");
-
-    // std::vector<int> spec = {4, 4, 5, 6, 5, 4, 3}; // the num of neuron in every layer
-    // network net(spec);
-    // net.train(x, y, 10000, 0.01);
+    // std::vector<int> spec = {4, 5, 3}; // the num of neuron in every layer
+    // Network net(spec);
+    // net.train(x, y, 10000, 0.1);
+    // net.saveModel("./data.model");
 
     Network net;
     net.loadModel("./data.model");
@@ -40,9 +30,9 @@ int main()
     }
     printf("\n");
 
-    // net.printNet();
     printf("accuracy %f\n", net.test(x, y));
-    // net.saveModel("./data.model");
+
+    // net.printNet();
 
     return 0;
 }
