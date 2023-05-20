@@ -8,15 +8,17 @@
 class neuron
 {
 private:
-    std::default_random_engine engine{time(nullptr)};
-    std::normal_distribution<> dis;
+    std::default_random_engine engine;
+    std::normal_distribution<double> distribution;
 
 public:
-    std::vector<double> w;
-    double b;
-    double o;
-    double error;
-    
+    double generateRandom(double min, double max);
+
+    std::vector<double> weights;
+    double bias;
+    double output;
+    double delta;
+
 public:
     neuron();
     neuron(int preSize);

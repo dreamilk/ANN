@@ -19,10 +19,16 @@ public:
     network(std::vector<int> layerSize);
     ~network();
 
-    void train(std::vector<std::vector<double>> x,std::vector<std::vector<double>> y,int epoches);
+    double activate(double);
+    double activateDerivative(double);
+
+    void train(std::vector<std::vector<double>> x,std::vector<std::vector<double>> y,int epoches,double learningRate);
     std::vector<double> predict(std::vector<double> input);
     void fprop(std::vector<double> input);
-    void bprop(double loss);
+    void bprop(std::vector<double> output);
+    void updateWeights(std::vector<double> input,double learningRate);
+
+    void printNet();
 
 };
 
