@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-mkdir build
-cd build
-rm -rf *
-cmake ..
+mkdir temp
+cd temp
+cmake .. -DCMAKE_INSTALL_PREFIX=./../
 make
+make install
+cd ..
+rm -rf temp
