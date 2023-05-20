@@ -16,10 +16,10 @@ int main()
     std::vector<int> spec = {4, 2, 3}; // the num of neuron in every layer
     Network net(spec);
     net.train(x, y, 10000, 0.1);
-    net.saveModel("./data.model");
+    net.saveModel("./net.model");
 
     // Network net;
-    // net.loadModel("./data.model");
+    // net.loadModel("./net.model");
 
     std::vector<double> input = x[0];
     std::vector<double> output = net.predict(input);
