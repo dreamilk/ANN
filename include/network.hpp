@@ -7,13 +7,15 @@
 #include "hidden_layer.hpp"
 
 #include <vector>
+#include <algorithm>
 
 class network
 {
 private:
-    std::vector<layer*> layers;
+    std::vector<layer *> layers;
 
     double calculateLoss(std::vector<double> output);
+
 public:
     network();
     network(std::vector<int> layerSize);
@@ -22,14 +24,15 @@ public:
     double activate(double);
     double activateDerivative(double);
 
-    void train(std::vector<std::vector<double>> x,std::vector<std::vector<double>> y,int epoches,double learningRate);
+    void train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate);
     std::vector<double> predict(std::vector<double> input);
     void fprop(std::vector<double> input);
     void bprop(std::vector<double> output);
-    void updateWeights(std::vector<double> input,double learningRate);
+    void updateWeights(std::vector<double> input, double learningRate);
+
+    double test(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y);
 
     void printNet();
-
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "layer.hpp"
 #include "network.hpp"
+#include "dataset.hpp"
 
 #include <cstdio>
 #include <vector>
@@ -7,38 +8,38 @@
 int main()
 {
     printf("Welcome my mechine learning\n");
-    std::vector<std::vector<double>> x;
-    std::vector<std::vector<double>> y;
+    DataSet ds;
+    ds.readIrisData();
+    std::vector<std::vector<double>> x = ds.getInput();
+    std::vector<std::vector<double>> y = ds.getOutput();
 
-    for (int i = 1; i <= 10000; i++)
-    {
-        if (i % 2 == 0)
-        {
-            x.push_back({2, 1});
-            y.push_back({1, 0});
-        }
-        else
-        {
-            x.push_back({1, 3});
-            y.push_back({0, 1});
-        }
-    }
+    // for (auto a : x[0])
+    // {
+    //     printf("%f ", a);
+    // }
+    // printf("\n");
+    // for (auto b : y[0])
+    // {
+    //     printf("%f ", b);
+    // }
+    // printf("\n");
 
-    std::vector<int> spec = {1, 2, 2}; // the num of neuron in every layer
+    std::vector<int> spec = {4, 4, 5, 6, 5, 4, 3}; // the num of neuron in every layer
 
     network net(spec);
-    net.train(x, y, 100, 0.1);
+    net.train(x, y, 10000, 0.01);
 
-    std::vector<double> input = {2, 1};
+    std::vector<double> input = x[0];
     std::vector<double> output = net.predict(input);
-    net.printNet();
-
     printf("Predict output is: \n");
     for (auto o : output)
     {
         printf("%f ", o);
     }
     printf("\n");
+
+    // net.printNet();
+    printf("accuracy %f\n", net.test(x, y));
 
     return 0;
 }

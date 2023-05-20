@@ -1,15 +1,11 @@
 #ifndef __DATA_HPP
 #define __DATA_HPP
 
-class data
+class Data
 {
 private:
-
 public:
-
-    data();
-
-    ~data();
+    Data();
 };
 
 #endif

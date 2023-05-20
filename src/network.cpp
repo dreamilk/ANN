@@ -180,6 +180,23 @@ void network::printNet()
     }
 }
 
+double network::test(std::vector<std::vector<double>> input, std::vector<std::vector<double>> output)
+{
+    int totalNum = input.size();
+    int correctNum = 0;
+    for (int i = 0; i < totalNum; ++i)
+    {
+        auto x = input.at(i);
+        auto y = output.at(i);
+        std::vector<double> z = predict(x);
+
+        int a = std::max_element(y.begin(), y.end()) - y.begin();
+        int b = std::max_element(z.begin(), z.end()) - z.begin();
+        correctNum += (a == b);
+    }
+    return 1.0 * correctNum / totalNum;
+}
+
 network::~network()
 {
 }
