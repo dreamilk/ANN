@@ -20,6 +20,11 @@ public:
     Network(std::vector<int> layerSize);
     ~Network();
 
+    double Sigmoid(double);
+    double SigmoidDerivative(double);
+    double ReLu(double);
+    double ReLuDerivative(double);
+
     double activate(double);
     double activateDerivative(double);
 

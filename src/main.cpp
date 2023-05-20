@@ -13,7 +13,7 @@ int main()
     std::vector<std::vector<double>> x = ds.getInput();
     std::vector<std::vector<double>> y = ds.getOutput();
 
-    std::vector<int> spec = {4, 2, 3}; // the num of neuron in every layer
+    std::vector<int> spec = {4, 5, 6, 4, 3}; // the num of neuron in every layer
     Network net(spec);
     net.train(x, y, 10000, 0.1);
     net.saveModel("./net.model");

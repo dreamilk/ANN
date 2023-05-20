@@ -29,14 +29,34 @@ double Network::calculateLoss(std::vector<double> output)
     return loss / (2 * output.size());
 }
 
-double Network::activate(double x)
+double Network::Sigmoid(double x)
 {
     return 1 / (1 + exp(-x));
 }
 
-double Network::activateDerivative(double y)
+double Network::SigmoidDerivative(double y)
 {
     return y * (1 - y);
+}
+
+double Network::ReLu(double x)
+{
+    return std::max(x, 0.0);
+}
+
+double Network::ReLuDerivative(double y)
+{
+    return y > 0 ? 1.0 : 0.0;
+}
+
+double Network::activate(double x)
+{
+    return Sigmoid(x);
+}
+
+double Network::activateDerivative(double y)
+{
+    return SigmoidDerivative(y);
 }
 
 void Network::bprop(std::vector<double> output)
