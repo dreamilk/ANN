@@ -17,26 +17,28 @@ int main()
     std::vector<std::vector<double>> x_test = ds.getTestInput();
     std::vector<std::vector<double>> y_test = ds.getTestOutput();
 
-    std::vector<int> spec = {28 * 28, 256, 64, 10}; // the num of neuron in every layer
-    Network net(spec);
-    net.train(x, y, 10, 0.01, 4);
-    net.saveModel("./10_net.model");
+    // std::vector<int> spec = {28 * 28, 256, 64, 10}; // the num of neuron in every layer
+    // Network net(spec);
+    // net.train(x, y, 10, 0.01, 4);
+    // net.saveModel("./10_net.model");
 
-    // Network net;
-    // net.loadModel("./net.model");
+    Network net;
+    net.loadModel("./10_net.model");
 
     printf("accuracy %f\n", net.test(x_test, y_test));
     // net.printNet();
 
-    std::vector<double> input = x[0];
-    std::vector<double> expect = y[0];
+    std::vector<double> input = x[100];
+    std::vector<double> expect = y[100];
 
     ds.printDigit(input);
     std::vector<double> output = net.predict(input);
     printf("Predict expect is: \n");
     printData(expect);
+    printf("result is %d\n", maxIndex(expect));
     printf("Predict output is: \n");
     printData(output);
+    printf("result is %d\n", maxIndex(output));
 
     return 0;
 }
