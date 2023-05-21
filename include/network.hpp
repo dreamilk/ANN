@@ -30,7 +30,10 @@ public:
     double activate(double);
     double activateDerivative(double);
 
-    void train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate, int batchSize = 1, bool shuffle = false);
+    void train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate,
+               int batchSize = 1, bool shuffle = false,
+               std::vector<std::vector<double>> test_input = {},
+               std::vector<std::vector<double>> test_ouput = {});
 
     std::vector<double> predict(std::vector<double> input);
     void fprop(std::vector<double> input);

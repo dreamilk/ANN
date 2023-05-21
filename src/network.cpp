@@ -161,7 +161,11 @@ void Network::updateWeights(std::vector<double> grad, double learningRate)
 //     }
 // }
 
-void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate, int batchSize, bool shuffle)
+void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y,
+                    int epoches, double learningRate,
+                    int batchSize, bool shuffle,
+                    std::vector<std::vector<double>> test_input,
+                    std::vector<std::vector<double>> test_ouput)
 {
     printf("Training Epoches = %d LearningRate = %f BatchSize = %d Shuffle = %d \n ", epoches, learningRate, batchSize, shuffle);
 
@@ -185,8 +189,7 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
         }
         int iteration = x.size() / batchSize;
 
-        double totalLoss = 0;
-        int correct = 0;
+        double totalLoss = 0.0;
 
         for (int j = 0; j < iteration; ++j)
         {
@@ -197,18 +200,6 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
                 auto expect = y[j * batchSize + i];
 
                 fprop(input);
-                // check correct
-                int result = 0, maxSocre = -1.0;
-                for (int k = 0; k < layers.back()->neurons.size(); ++k)
-                {
-                    if (layers.back()->neurons.at(k)->output > maxSocre)
-                    {
-                        maxSocre = layers.back()->neurons.at(k)->output;
-                        result = k;
-                    }
-                }
-                correct += (result == maxIndex(expect));
-
                 // calculate loss
                 double loss = calculateLoss(expect);
                 totalLoss += loss;
@@ -230,7 +221,12 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
             updateWeights(avgGrad, learningRate);
             ++train_step;
         }
-        double accuracy = 1.0 * correct / x.size();
+
+        double accuracy = -1.0;
+        if (test_input.size() > 0 && test_input.size() == test_ouput.size())
+        {
+            accuracy = test(test_input, test_ouput);
+        }
 
         printf("[%d|%d] TotalLoss %f Accuracy %f \n", epo, epoches, totalLoss, accuracy);
         log.push_back(std::to_string(totalLoss) + " " + std::to_string(accuracy));

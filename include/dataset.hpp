@@ -14,8 +14,6 @@ private:
     std::vector<std::vector<double>> test_output;
     std::vector<std::string> label;
 
-    double getNormalized(double d, double min, double max);
-
     void readMnistTrainImage();
     void readMnistTrainLable();
     void readMnistTestImage();

@@ -249,14 +249,15 @@ std::vector<std::vector<double>> DataSet::getTestOutput()
     return test_output;
 }
 
-double DataSet::getNormalized(double d, double min, double max)
-{
-    double t = (d - min) / (max - min);
-    return t;
-}
-
 std::vector<std::vector<double>> DataSet::getNormalizedData(std::vector<std::vector<double>> data)
 {
+    auto getNormalized = [](double d, double min, double max)
+    {
+        if (max == min)
+            return d;
+        return (d - min) / (max - min);
+    };
+
     std::vector<double> maxVec = data[0];
     std::vector<double> minVec = data[0];
     for (int i = 0; i < data.size(); ++i)
