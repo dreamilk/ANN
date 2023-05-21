@@ -117,9 +117,28 @@ void Network::updateWeights(std::vector<double> input, double learingRate)
     }
 }
 
+void Network::saveLogs(std::string path, std::vector<double> logs)
+{
+    std::ofstream ofs(path, std::ios::out);
+    if (!ofs.is_open())
+    {
+        printf("save logs Error\n");
+    }
+    else
+    {
+        for (auto a : logs)
+        {
+            ofs << a << std::endl;
+        }
+        ofs.close();
+    }
+}
+
 void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate)
 {
     printf("Training Epoches = %d  LearningRate = %f\n ", epoches, learningRate);
+    std::vector<double> log;
+    auto start = std::chrono::system_clock::now();
     for (int epo = 1; epo <= epoches; ++epo)
     {
         double totalLoss = 0;
@@ -135,8 +154,15 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
             updateWeights(input, learningRate);
         }
         printf("[%d|%d] TotalLoss %f \n", epo, epoches, totalLoss);
+        log.push_back(totalLoss);
     }
-    printf("End Training \n");
+    auto end = std::chrono::system_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+    std::string path = "./logs/train_logs.txt";
+    saveLogs(path, log);
+
+    printf("End Training, Time Cost %.2f s, Save Logs %s \n", 0.000001 * duration, path.c_str());
 }
 
 void Network::fprop(std::vector<double> input)

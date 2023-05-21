@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <fstream>
 #include <string>
+#include <chrono>
 
 class Network
 {
@@ -14,6 +15,8 @@ private:
     std::vector<Layer *> layers;
 
     double calculateLoss(std::vector<double> output);
+
+    void saveLogs(std::string,std::vector<double>);
 
 public:
     Network();
