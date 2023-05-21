@@ -161,27 +161,6 @@ void Network::updateWeights(std::vector<double> grad, double learningRate)
 //     }
 // }
 
-void Network::saveLogs(std::string path, std::vector<double> logs)
-{
-    std::ofstream ofs(path, std::ios::out);
-    if (!ofs.is_open())
-    {
-        printf("save logs Error\n");
-    }
-    else
-    {
-        for (auto a : logs)
-        {
-            ofs << a << std::endl;
-        }
-        ofs.close();
-    }
-}
-
-void Network::shuffleData(std::vector<std::vector<double>> &train_input, std::vector<std::vector<double>> &train_output)
-{
-}
-
 void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate, int batchSize, bool shuffle)
 {
     printf("Training Epoches = %d LearningRate = %f BatchSize = %d Shuffle = %d \n ", epoches, learningRate, batchSize, shuffle);
@@ -192,7 +171,7 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
         return;
     }
 
-    std::vector<double> log;
+    std::vector<std::string> log;
     auto start = std::chrono::system_clock::now();
 
     int train_step = 0;
@@ -207,6 +186,7 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
         int iteration = x.size() / batchSize;
 
         double totalLoss = 0;
+        int correct = 0;
 
         for (int j = 0; j < iteration; ++j)
         {
@@ -214,12 +194,26 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
             for (int i = 0; i < batchSize; ++i)
             {
                 auto input = x[j * batchSize + i];
-                auto output = y[j * batchSize + i];
+                auto expect = y[j * batchSize + i];
 
                 fprop(input);
-                double loss = calculateLoss(output);
+                // check correct
+                int result = 0, maxSocre = -1.0;
+                for (int k = 0; k < layers.back()->neurons.size(); ++k)
+                {
+                    if (layers.back()->neurons.at(k)->output > maxSocre)
+                    {
+                        maxSocre = layers.back()->neurons.at(k)->output;
+                        result = k;
+                    }
+                }
+                correct += (result == maxIndex(expect));
+
+                // calculate loss
+                double loss = calculateLoss(expect);
                 totalLoss += loss;
-                bprop(output);
+                bprop(expect);
+                // update after batchsize
                 std::vector<double> grad = collectGrad();
                 totalGrad.push_back(grad);
             }
@@ -236,9 +230,10 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
             updateWeights(avgGrad, learningRate);
             ++train_step;
         }
+        double accuracy = 1.0 * correct / x.size();
 
-        printf("[%d|%d] TotalLoss %f \n", epo, epoches, totalLoss);
-        log.push_back(totalLoss);
+        printf("[%d|%d] TotalLoss %f Accuracy %f \n", epo, epoches, totalLoss, accuracy);
+        log.push_back(std::to_string(totalLoss) + " " + std::to_string(accuracy));
     }
     auto end = std::chrono::system_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
