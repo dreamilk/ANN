@@ -16,7 +16,8 @@ private:
 
     double calculateLoss(std::vector<double> output);
 
-    void saveLogs(std::string,std::vector<double>);
+    void saveLogs(std::string, std::vector<double>);
+    void shuffleData(std::vector<std::vector<double>> &train_input, std::vector<std::vector<double>> &train_output);
 
 public:
     Network();
@@ -31,11 +32,14 @@ public:
     double activate(double);
     double activateDerivative(double);
 
-    void train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate);
+    void train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate, int batchSize = 1, bool shuffle = false);
+
     std::vector<double> predict(std::vector<double> input);
     void fprop(std::vector<double> input);
     void bprop(std::vector<double> output);
-    void updateWeights(std::vector<double> input, double learningRate);
+    
+    std::vector<double> collectGrad();                                              // collectGrad  but not updateweights
+    void updateWeights(std::vector<double> grad, double learningRate);             // update_neuron by grad
 
     double test(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y);
 

@@ -92,30 +92,74 @@ void Network::bprop(std::vector<double> output)
     }
 }
 
-void Network::updateWeights(std::vector<double> input, double learingRate)
+std::vector<double> Network::collectGrad()
 {
-    for (int i = 0; i < layers.size(); ++i)
+    std::vector<double> grad;
+    std::vector<double> input;
+    for (int i = 1; i < layers.size(); ++i)
     {
         Layer *l = layers.at(i);
-        if (i != 0)
+
+        input.clear();
+        for (Neuron *n : layers.at(i - 1)->neurons)
         {
-            input.clear();
-            for (Neuron *n : layers.at(i - 1)->neurons)
-            {
-                input.push_back(n->output);
-            }
+            input.push_back(n->output);
         }
 
         for (Neuron *n : l->neurons)
         {
             for (int j = 0; j < n->weights.size(); ++j)
             {
-                n->weights[j] += learingRate * n->delta * input.at(j);
+                grad.push_back(n->delta * input.at(j));
             }
-            n->bias += learingRate * n->delta;
+            grad.push_back(n->delta);
+        }
+    }
+    return grad;
+}
+
+void Network::updateWeights(std::vector<double> grad, double learningRate)
+{
+    int p = 0;
+    for (int i = 1; i < layers.size(); ++i)
+    {
+        Layer *l = layers.at(i);
+
+        for (Neuron *n : l->neurons)
+        {
+            for (int j = 0; j < n->weights.size(); ++j)
+            {
+                n->weights[j] += learningRate * grad[p++];
+            }
+            n->bias += learningRate * grad[p++];
         }
     }
 }
+
+// void Network::updateWeights(std::vector<double> input, double learingRate)
+// {
+//     for (int i = 0; i < layers.size(); ++i)
+//     {
+//         Layer *l = layers.at(i);
+//         if (i != 0)
+//         {
+//             input.clear();
+//             for (Neuron *n : layers.at(i - 1)->neurons)
+//             {
+//                 input.push_back(n->output);
+//             }
+//         }
+
+//         for (Neuron *n : l->neurons)
+//         {
+//             for (int j = 0; j < n->weights.size(); ++j)
+//             {
+//                 n->weights[j] += learingRate * n->delta * input.at(j);
+//             }
+//             n->bias += learingRate * n->delta;
+//         }
+//     }
+// }
 
 void Network::saveLogs(std::string path, std::vector<double> logs)
 {
@@ -134,25 +178,65 @@ void Network::saveLogs(std::string path, std::vector<double> logs)
     }
 }
 
-void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate)
+void Network::shuffleData(std::vector<std::vector<double>> &train_input, std::vector<std::vector<double>> &train_output)
 {
-    printf("Training Epoches = %d  LearningRate = %f\n ", epoches, learningRate);
+}
+
+void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<double>> y, int epoches, double learningRate, int batchSize, bool shuffle)
+{
+    printf("Training Epoches = %d LearningRate = %f BatchSize = %d Shuffle = %d \n ", epoches, learningRate, batchSize, shuffle);
+
+    if (x.size() % batchSize != 0)
+    {
+        printf("DataSet Size and BatchSize not Match\n");
+        return;
+    }
+
     std::vector<double> log;
     auto start = std::chrono::system_clock::now();
+
+    int train_step = 0;
+
     for (int epo = 1; epo <= epoches; ++epo)
     {
-        double totalLoss = 0;
-        for (int i = 0; i < x.size(); ++i)
+        // shuffle train_datasets
+        if (shuffle)
         {
-            auto input = x[i];
-            auto output = y[i];
-
-            fprop(input);
-            double loss = calculateLoss(output);
-            totalLoss += loss;
-            bprop(output);
-            updateWeights(input, learningRate);
+            shuffleData(x, y);
         }
+        int iteration = x.size() / batchSize;
+
+        double totalLoss = 0;
+
+        for (int j = 0; j < iteration; ++j)
+        {
+            std::vector<std::vector<double>> totalGrad;
+            for (int i = 0; i < batchSize; ++i)
+            {
+                auto input = x[j * batchSize + i];
+                auto output = y[j * batchSize + i];
+
+                fprop(input);
+                double loss = calculateLoss(output);
+                totalLoss += loss;
+                bprop(output);
+                std::vector<double> grad = collectGrad();
+                totalGrad.push_back(grad);
+            }
+            std::vector<double> avgGrad;
+            for (int i = 0; i < totalGrad[0].size(); ++i)
+            {
+                double sum = 0.0;
+                for (int j = 0; j < totalGrad.size(); ++j)
+                {
+                    sum += totalGrad[j][i];
+                }
+                avgGrad.push_back(sum / totalGrad.size());
+            }
+            updateWeights(avgGrad, learningRate);
+            ++train_step;
+        }
+
         printf("[%d|%d] TotalLoss %f \n", epo, epoches, totalLoss);
         log.push_back(totalLoss);
     }
@@ -162,7 +246,7 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
     std::string path = "./logs/train_logs.txt";
     saveLogs(path, log);
 
-    printf("End Training, Time Cost %.2f s, Save Logs %s \n", 0.000001 * duration, path.c_str());
+    printf("End Training, Train Step %ld , Time Cost %.2f s, Save Logs %s \n", train_step, 0.000001 * duration, path.c_str());
 }
 
 void Network::fprop(std::vector<double> input)

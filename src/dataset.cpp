@@ -155,6 +155,7 @@ void DataSet::printDigit(std::vector<double> x)
     if (x.size() != 28 * 28)
     {
         printf("printDigit Error\n");
+        return;
     }
     for (int i = 0; i < 28; ++i)
     {
