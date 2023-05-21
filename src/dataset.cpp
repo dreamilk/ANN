@@ -258,6 +258,11 @@ std::vector<std::vector<double>> DataSet::getNormalizedData(std::vector<std::vec
         return (d - min) / (max - min);
     };
 
+    if (data.size() == 0)
+    {
+        return data;
+    }
+
     std::vector<double> maxVec = data[0];
     std::vector<double> minVec = data[0];
     for (int i = 0; i < data.size(); ++i)
