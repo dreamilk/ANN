@@ -100,7 +100,6 @@ std::vector<double> Network::collectGrad()
     {
         Layer *l = layers.at(i);
 
-        input.clear();
         for (Neuron *n : layers.at(i - 1)->neurons)
         {
             input.push_back(n->output);
@@ -114,6 +113,7 @@ std::vector<double> Network::collectGrad()
             }
             grad.push_back(n->delta);
         }
+        input.clear();
     }
     return grad;
 }
