@@ -2,5 +2,7 @@ a.exe
 .vscode
 temp
 build
+logs
+models
 ann
 ann.exe
