@@ -150,7 +150,7 @@ void DataSet::readMnistTestImage()
     ifsLable.close();
 }
 
-void DataSet::printDigit(std::vector<double> x)
+void DataSet::printDigit(std::vector<double> x, double mask)
 {
     if (x.size() != 28 * 28)
     {
@@ -161,7 +161,7 @@ void DataSet::printDigit(std::vector<double> x)
     {
         for (int j = 0; j < 28; ++j)
         {
-            if (x[i * 28 + j] > 180)
+            if (x[i * 28 + j] > mask)
             {
                 printf("##");
             }
@@ -255,26 +255,26 @@ double DataSet::getNormalized(double d, double min, double max)
     return t;
 }
 
-std::vector<std::vector<double>> DataSet::getNormalizedInput()
+std::vector<std::vector<double>> DataSet::getNormalizedData(std::vector<std::vector<double>> data)
 {
-    std::vector<double> maxVec = train_input[0];
-    std::vector<double> minVec = train_input[0];
-    for (int i = 0; i < train_input.size(); ++i)
+    std::vector<double> maxVec = data[0];
+    std::vector<double> minVec = data[0];
+    for (int i = 0; i < data.size(); ++i)
     {
         for (int j = 0; j < maxVec.size(); ++j)
         {
-            maxVec[j] = std::max(maxVec[j], train_input[i][j]);
-            minVec[j] = std::min(minVec[j], train_input[i][j]);
+            maxVec[j] = std::max(maxVec[j], data[i][j]);
+            minVec[j] = std::min(minVec[j], data[i][j]);
         }
     }
     std::vector<std::vector<double>> x;
 
-    for (int i = 0; i < train_input.size(); ++i)
+    for (int i = 0; i < data.size(); ++i)
     {
         std::vector<double> item;
         for (int j = 0; j < maxVec.size(); ++j)
         {
-            item.push_back(getNormalized(train_input[i][j], minVec[j], maxVec[j]));
+            item.push_back(getNormalized(data[i][j], minVec[j], maxVec[j]));
         }
         x.push_back(item);
     }

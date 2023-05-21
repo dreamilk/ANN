@@ -27,10 +27,9 @@ public:
     void readIrisData();
     void readMnistData();
 
-    void printDigit(std::vector<double>);
+    void printDigit(std::vector<double>, double mask);
 
-    std::vector<std::vector<double>> getNormalizedInput();
-    std::vector<std::vector<double>> getNormalizedOutput();
+    std::vector<std::vector<double>> getNormalizedData(std::vector<std::vector<double>>);
 
     std::vector<std::vector<double>> getInput();
     std::vector<std::vector<double>> getOutput();
