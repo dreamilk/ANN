@@ -27,10 +27,10 @@ int main()
     std::vector<int> spec = {28 * 28, 256, 64, 10}; // the num of neuron in every layer
     Network net(spec);
     net.train(x_n, y_n, 10, 0.01, 4);
-    net.saveModel("./net.model");
+    net.saveModel("./models/net.model");
 
     // Network net;
-    // net.loadModel("./net.model");
+    // net.loadModel("./models/net.model");
 
     printf("accuracy %f\n", net.test(x_test_n, y_test_n));
     // net.printNet();
