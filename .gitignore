@@ -4,3 +4,5 @@ temp
 build
 ann
 ann.exe
+*.model
+logs
