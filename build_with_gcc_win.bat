@@ -1,1 +1,1 @@
-g++ -I ./include ./src/* -o ann.exe
+g++ -I ./include ./src/* -o ann.exe -w

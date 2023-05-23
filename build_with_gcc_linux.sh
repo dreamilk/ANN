@@ -1,1 +1,1 @@
-g++ -I ./include ./src/* -o ann
+g++ -I ./include ./src/* -o ann -w
