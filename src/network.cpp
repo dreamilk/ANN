@@ -76,12 +76,12 @@ double Network::TanhDerivative(double x)
 
 double Network::activate(double x)
 {
-    return Tanh(x);
+    return LeakyReLu(x);
 }
 
 double Network::activateDerivative(double y)
 {
-    return TanhDerivative(y);
+    return LeakyReLuDerivative(y);
 }
 
 void Network::bprop(std::vector<double> output)
