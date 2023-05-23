@@ -3,21 +3,21 @@ An artificial neural network framework based on c++
 
 ## BUILD
 **Linux**
+```
+./build_with_gcc_linux.sh
+```
+Or
 
 Ensure that cmake, make, and g++ are installed
 ```
 ./build_with_cmake_linux.sh
 ```
-or
-```
-cp build_with_gcc_win.bat build_with_gcc_linux.sh
-./build_with_gcc_linux.sh
-```
+
 **Windows**
 
 You can change gcc to another compiler (such as clang,msvc)
 ```
-./build_with_gcc_win.bat
+build_with_gcc_win.bat
 ```
 
 ## TEST

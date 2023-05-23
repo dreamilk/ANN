@@ -402,4 +402,10 @@ void Network::loadModel(std::string path)
 
 Network::~Network()
 {
+    for (int i = 0; i < layers.size(); ++i)
+    {
+        Layer *l = layers.at(i);
+        delete l;
+    }
+    layers.clear();
 }

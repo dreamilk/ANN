@@ -26,4 +26,5 @@ Neuron::Neuron(int preSize)
 
 Neuron::~Neuron()
 {
+    
 }
