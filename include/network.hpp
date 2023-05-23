@@ -26,6 +26,10 @@ public:
     double SigmoidDerivative(double);
     double ReLu(double);
     double ReLuDerivative(double);
+    double LeakyReLu(double);
+    double LeakyReLuDerivative(double);
+    double Tanh(double);
+    double TanhDerivative(double);
 
     double activate(double);
     double activateDerivative(double);

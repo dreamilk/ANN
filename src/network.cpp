@@ -49,14 +49,39 @@ double Network::ReLuDerivative(double y)
     return y > 0 ? 1.0 : 0.0;
 }
 
+double Network::LeakyReLu(double d)
+{
+    return std::max(0.01 * d, d);
+}
+double Network::LeakyReLuDerivative(double d)
+{
+    return d > 0 ? 1 : 0.01;
+}
+
+double Network::Tanh(double x)
+{
+    // double a = exp(x);
+    // double b = exp(-x);
+    // return (a - b) / (a + b);
+    return tanh(x);
+}
+
+double Network::TanhDerivative(double x)
+{
+    // double a = exp(x);
+    // double b = exp(-x);
+    // return 1 - pow((a - b) / (a + b), 2);
+    return 1 - pow(tanh(x), 2);
+}
+
 double Network::activate(double x)
 {
-    return Sigmoid(x);
+    return Tanh(x);
 }
 
 double Network::activateDerivative(double y)
 {
-    return SigmoidDerivative(y);
+    return TanhDerivative(y);
 }
 
 void Network::bprop(std::vector<double> output)
