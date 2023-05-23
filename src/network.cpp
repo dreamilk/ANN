@@ -168,10 +168,10 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
                     std::vector<std::vector<double>> test_ouput)
 {
     printf("Training Epoches = %d LearningRate = %f BatchSize = %d Shuffle = %d \n", epoches, learningRate, batchSize, shuffle);
-
-    if (x.size() % batchSize != 0)
+    printf("TrainDataSize = %d TestDataSize = %d \n", x.size(), test_input.size());
+    if (x.size() != y.size() || test_input.size() != test_ouput.size() || x.size() % batchSize != 0)
     {
-        printf("DataSet Size and BatchSize not Match\n");
+        printf("There are some errors in the dataset or parameters\n");
         return;
     }
 
