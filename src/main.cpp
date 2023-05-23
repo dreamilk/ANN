@@ -35,12 +35,12 @@ int main()
     // Network net;
     // net.loadModel("./models/net.model");
 
-    // printf("accuracy %f\n", net.test(x_n, y_n));
-    // net.printNet();
+    printf("accuracy %f\n", net.test(x_n, y_n));
+    net.printNet();
 
     // predict test
-    std::vector<double> input = x_n[0];
-    std::vector<double> expect = y_n[0];
+    std::vector<double> input = x_n[1];
+    std::vector<double> expect = y_n[1];
 
     ds.printDigit(input, 0.6);
 

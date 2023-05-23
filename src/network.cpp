@@ -279,27 +279,30 @@ std::vector<double> Network::predict(std::vector<double> input)
 
 void Network::printNet()
 {
-    printf("Network\n");
-    std::vector<std::string> data;
+    printf("Network Structure:\n");
+    printf("--------------------------------------------\n");
+    long long int sum = 0;
     for (int i = 0; i < layers.size(); ++i)
     {
+        std::string s;
         Layer *l = layers.at(i);
-        data.push_back("L" + std::to_string(l->neurons.size()));
-        for (Neuron *n : l->neurons)
+        if (i == 0)
         {
-            std::string nData = "N" + std::to_string(n->weights.size()) + " ";
-            for (int j = 0; j < n->weights.size(); ++j)
-            {
-                nData += std::to_string(n->weights[j]) + ",";
-            }
-            nData += std::to_string(n->bias);
-            data.push_back(nData);
+            printf("[input_layer] input_size = %d \n", l->neurons.size());
         }
+        else if (i == layers.size() - 1)
+        {
+            printf("[output_layer] output_size = %d \n", l->neurons.size());
+        }
+        else
+        {
+            printf("[hidden_layer] neuron_size = %d \n", l->neurons.size());
+        }
+        sum += l->neurons.size() * (l->neurons[0]->weights.size() + 1);
     }
-    for (std::string s : data)
-    {
-        printf("%s\n", s.c_str());
-    }
+    printf("--------------------------------------------\n");
+    printf("Number of parameters: %lld\n", sum);
+    printf("--------------------------------------------\n");
 }
 
 double Network::test(std::vector<std::vector<double>> input, std::vector<std::vector<double>> output)
@@ -353,11 +356,12 @@ void Network::saveModel(std::string path)
 
 void Network::loadModel(std::string path)
 {
+    printf("LoadModel from %s \n", path.c_str());
     std::ifstream ifs;
     ifs.open(path, std::ios::in);
     if (!ifs.is_open())
     {
-        printf("loadModel Error\n");
+        printf("LoadModel Error\n");
         return;
     }
     layers.clear();
@@ -398,6 +402,7 @@ void Network::loadModel(std::string path)
         }
     }
     ifs.close();
+    printf("LoadModel Success \n");
 }
 
 Network::~Network()
