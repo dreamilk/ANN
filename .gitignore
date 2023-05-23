@@ -1,8 +1,9 @@
 a.exe
+ann
+ann.exe
 .vscode
 temp
 build
 logs
 models
-ann
-ann.exe
+datasets/MNIST_data/data_zip
