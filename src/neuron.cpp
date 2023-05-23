@@ -2,6 +2,8 @@
 
 Neuron::Neuron()
 {
+    srand((unsigned int)time(NULL));
+
     bias = 0;
     delta = 0;
     output = 0;
@@ -15,6 +17,8 @@ double Neuron::generateRandom(double min, double max)
 
 Neuron::Neuron(int preSize)
 {
+    srand((unsigned int)time(NULL));
+
     bias = generateRandom(-1, 1);
     for (int i = 0; i < preSize; ++i)
     {
@@ -26,5 +30,4 @@ Neuron::Neuron(int preSize)
 
 Neuron::~Neuron()
 {
-    
 }
