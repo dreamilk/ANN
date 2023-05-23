@@ -9,7 +9,7 @@
 
 int main()
 {
-    printf("Welcome my mechine learning\n");
+    printf("Welcome to mechine learning\n");
     DataSet ds;
     // ds.readIrisData();
     ds.readMnistData();
@@ -27,7 +27,7 @@ int main()
     std::vector<std::vector<double>> x_test_n = ds.getNormalizedData(x_test);
     std::vector<std::vector<double>> y_test_n = ds.getNormalizedData(y_test);
 
-    std::vector<int> spec = {28 * 28, 64, 10}; // the num of neuron in every layer
+    std::vector<int> spec = {28 * 28, 128, 10}; // the num of neuron in every layer
     Network net(spec);
     net.train(x_n, y_n, 10, 0.1, 16, true, x_test_n, y_test_n);
     net.saveModel("./models/net.model");

@@ -167,7 +167,7 @@ void Network::train(std::vector<std::vector<double>> x, std::vector<std::vector<
                     std::vector<std::vector<double>> test_input,
                     std::vector<std::vector<double>> test_ouput)
 {
-    printf("Training Epoches = %d LearningRate = %f BatchSize = %d Shuffle = %d \n ", epoches, learningRate, batchSize, shuffle);
+    printf("Training Epoches = %d LearningRate = %f BatchSize = %d Shuffle = %d \n", epoches, learningRate, batchSize, shuffle);
 
     if (x.size() % batchSize != 0)
     {
