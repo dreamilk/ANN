@@ -1,4 +1,4 @@
-#include "Layer.hpp"
+#include "layer.hpp"
 
 Layer::Layer()
 {
