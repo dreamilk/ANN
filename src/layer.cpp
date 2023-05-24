@@ -6,17 +6,17 @@ Layer::Layer()
 
 Layer::~Layer()
 {
-    for (int i = 0; i < neurons.size(); ++i)
+    for (size_t i = 0; i < neurons.size(); ++i)
     {
         Neuron *n = neurons.at(i);
         delete n;
     }
-    neurons.clear();
+    //neurons.clear();
 }
 
-Layer::Layer(int preSize, int size)
+Layer::Layer(int preSize, size_t size)
 {
-    for (int i = 0; i < size; ++i)
+    for (size_t i = 0; i < size; ++i)
     {
         neurons.push_back(new Neuron(preSize));
     }
