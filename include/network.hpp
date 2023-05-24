@@ -9,11 +9,12 @@
 #include <fstream>
 #include <string>
 #include <chrono>
+#include <memory>
 
 class Network
 {
 private:
-    std::vector<Layer *> layers;
+    std::vector<std::shared_ptr<Layer>> layers;
 
     double calculateLoss(std::vector<double> output);
 

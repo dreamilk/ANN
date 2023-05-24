@@ -3,16 +3,17 @@
 
 #include "neuron.hpp"
 
+#include <memory>
 #include <vector>
 
 class Layer
 {
 public:
-    std::vector<Neuron *> neurons;
+    std::vector<std::shared_ptr<Neuron>> neurons;
 
 public:
     Layer();
-    Layer(int preSize, int size);
+    Layer(size_t preSize, size_t size);
     ~Layer();
 };
 

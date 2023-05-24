@@ -10,11 +10,11 @@ Network::Network(std::vector<int> layerSize)
     {
         if (i == 0)
         {
-            layers.push_back(new Layer(0, layerSize[i]));
+            layers.push_back(std::make_shared<Layer>(0, layerSize[i]));
         }
         else
         {
-            layers.push_back(new Layer(layerSize[i - 1], layerSize[i]));
+            layers.push_back(std::make_shared<Layer>(layerSize[i - 1], layerSize[i]));
         }
     }
 }
@@ -88,14 +88,14 @@ void Network::bprop(std::vector<double> output)
 {
     for (int i = layers.size() - 1; i >= 0; i--)
     {
-        Layer *l = layers.at(i);
+        auto l = layers.at(i);
         std::vector<double> errors;
         if (i != layers.size() - 1)
         {
             for (int j = 0; j < l->neurons.size(); j++)
             {
                 double error = 0;
-                for (Neuron *n : layers.at(i + 1)->neurons)
+                for (auto n : layers.at(i + 1)->neurons)
                 {
                     error += n->weights.at(j) * n->delta;
                 }
@@ -111,7 +111,7 @@ void Network::bprop(std::vector<double> output)
         }
         for (int j = 0; j < l->neurons.size(); j++)
         {
-            Neuron *n = l->neurons.at(j);
+            auto n = l->neurons.at(j);
             n->delta = errors.at(j) * activateDerivative(n->output);
         }
     }
@@ -123,14 +123,14 @@ std::vector<double> Network::collectGrad()
     std::vector<double> input;
     for (int i = 1; i < layers.size(); ++i)
     {
-        Layer *l = layers.at(i);
+        auto l = layers.at(i);
 
-        for (Neuron *n : layers.at(i - 1)->neurons)
+        for (auto n : layers.at(i - 1)->neurons)
         {
             input.push_back(n->output);
         }
 
-        for (Neuron *n : l->neurons)
+        for (auto n : l->neurons)
         {
             for (int j = 0; j < n->weights.size(); ++j)
             {
@@ -148,9 +148,9 @@ void Network::updateWeights(std::vector<double> grad, double learningRate)
     int p = 0;
     for (int i = 1; i < layers.size(); ++i)
     {
-        Layer *l = layers.at(i);
+        auto l = layers.at(i);
 
-        for (Neuron *n : l->neurons)
+        for (auto n : l->neurons)
         {
             for (int j = 0; j < n->weights.size(); ++j)
             {
@@ -271,14 +271,14 @@ void Network::fprop(std::vector<double> input)
     {
         for (int j = 0; j < layers[i]->neurons.size(); ++j)
         {
-            Neuron *n = layers[i]->neurons[j];
+            auto n = layers[i]->neurons[j];
             if (i == 0)
             {
                 n->output = input[j];
             }
             else
             {
-                Layer *preLayer = layers[i - 1];
+                auto preLayer = layers[i - 1];
                 double sum = n->bias;
                 for (int k = 0; k < preLayer->neurons.size(); ++k)
                 {
@@ -310,7 +310,7 @@ void Network::printNet()
     for (int i = 0; i < layers.size(); ++i)
     {
         std::string s;
-        Layer *l = layers.at(i);
+        auto l = layers.at(i);
         if (i == 0)
         {
             printf("[input_layer] input_size = %d \n", l->neurons.size());
@@ -352,9 +352,9 @@ void Network::saveModel(std::string path)
     std::vector<std::string> data;
     for (int i = 0; i < layers.size(); ++i)
     {
-        Layer *l = layers.at(i);
+        auto l = layers.at(i);
         data.push_back("L" + std::to_string(l->neurons.size()));
-        for (Neuron *n : l->neurons)
+        for (auto n : l->neurons)
         {
             std::string nData = "N" + std::to_string(n->weights.size()) + " ";
             for (int j = 0; j < n->weights.size(); ++j)
@@ -397,14 +397,14 @@ void Network::loadModel(std::string path)
         if (line[0] == 'L')
         {
             int size = std::stoi(line.substr(1, line.size() - 1));
-            layers.push_back(new Layer());
+            layers.push_back(std::make_shared<Layer>());
         }
         else if (line[0] == 'N')
         {
-            Layer *l = layers.back();
+            auto l = layers.back();
             int num = 0;
             std::string s;
-            Neuron *neu = new Neuron();
+            std::shared_ptr<Neuron> neu = std::make_shared<Neuron>();
             for (int i = 1; i < line.size(); ++i)
             {
                 if (line[i] == ' ')
@@ -432,10 +432,4 @@ void Network::loadModel(std::string path)
 
 Network::~Network()
 {
-    for (int i = 0; i < layers.size(); ++i)
-    {
-        Layer *l = layers.at(i);
-        delete l;
-    }
-    layers.clear();
 }
