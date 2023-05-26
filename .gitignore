@@ -1,9 +1,12 @@
 a.exe
+out
 ann
 ann.exe
 .vscode
+.vs
 temp
 build
 logs
 models
 datasets/MNIST_data/data_zip
+*.obj
