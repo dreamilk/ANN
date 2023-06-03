@@ -22,6 +22,8 @@ build_with_gcc_win.bat
 
 ## TEST
 
+Create models folder and logs folder (if they do not exist)
+
 ```
 ./ann
 ```
