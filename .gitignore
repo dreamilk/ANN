@@ -6,7 +6,7 @@ ann.exe
 .vs
 temp
 build
-logs
-models
+logs/*
+models/*
 datasets/MNIST_data/data_zip
 *.obj
